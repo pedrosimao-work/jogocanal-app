@@ -1,15 +1,23 @@
-from fastapi import FastAPI  # Import FastAPI so the JogoCanal web application can be created
+from fastapi import FastAPI  # Import FastAPI so the main application object can be created
+
+from app.api.system import (
+    router as system_router,
+)  # Import the router containing the application-level operational endpoints
+from app.core.config import settings  # Import the validated central application settings
 
 
-app = FastAPI(  # Create the central FastAPI application object
-    title="JogoCanal",  # Set the application name shown in the generated API documentation
-    version="0.1.0",  # Record the initial application version for this compatibility milestone
-)  # Finish the FastAPI application configuration
+def create_app() -> FastAPI:  # Create and configure the FastAPI application
+    application = FastAPI(  # Create a new FastAPI application instance
+        title=settings.app_name,  # Use the configured application name in OpenAPI and Swagger UI
+        version=settings.app_version,  # Use the configured application version
+        debug=settings.debug,  # Apply the configured FastAPI debug behaviour
+    )  # Finish the FastAPI application configuration
+
+    application.include_router(
+        system_router
+    )  # Register the permanent system routes with the FastAPI application
+
+    return application  # Return the fully configured FastAPI application instance
 
 
-@app.get("/health", tags=["system"])  # Register a read-only endpoint used to verify that the application is running
-def health_check() -> dict[str, str]:  # Define a synchronous health check that returns string keys and values
-    return {  # Return a small JSON response that confirms the framework is operational
-        "status": "ok",  # Confirm that the application successfully processed the request
-        "framework": "FastAPI",  # Confirm that the response came from the FastAPI application
-    }  # Finish the health-check response
+app = create_app()  # Create the shared FastAPI application instance

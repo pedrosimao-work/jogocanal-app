@@ -1,0 +1,9 @@
+-r requirements.txt  # Install all runtime dependencies before installing development-tools only
+httpx==0.28.1  # Provide an asynchronous HTTP client for testing FastAPI through its ASGI interface
+mypy==2.3.0  # Provide static type checking for the application package
+pre-commit==4.6.2  # Run selected quality checks automatically before commits
+pytest==9.1.1  # Provide the main automated testing framework
+pytest-asyncio==1.4.0  # Allow pytest to execute native async test functions
+pytest-cov==7.1.0  # Measure application test coverage through pytest
+ruff==0.16.2  # Provide Python linting, import sorting, and code formatting
+uvicorn[standard]==0.52.1  # Run FastAPI natively through ASGI during local development
