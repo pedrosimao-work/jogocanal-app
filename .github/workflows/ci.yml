@@ -38,7 +38,7 @@ jobs:
         run: python -m ruff format --check .
 
       - name: Run mypy
-        run: python -m mypyapp
+        run: python -m mypy app
 
       - name: Run pytest
         run: python -m pytest
