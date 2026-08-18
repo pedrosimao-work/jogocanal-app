@@ -1,0 +1,38 @@
+[tool.ruff]  # Configure Ruff's project-wide linting and formatting behaviour
+target-version = "py311"  # Check the code against the Python 3.11 runtime used locally and in production
+line-length = 100  # Allow readable application code up to 100 characters before formatting wraps it
+extend-exclude = ["wsgi.py"]  # Preserve the already-verified Passenger compatibility wrapper outside normal application formatting
+
+[tool.ruff.lint]  # Configure which Ruff linting rule families are enabled
+select = ["E", "F", "I", "UP", "B", "SIM"]  # Check style errors, Python errors, imports, upgrades, common bugs, and simplifications
+
+[tool.ruff.lint.isort]  # Configure Ruff's built-in import sorting behaviour
+known-first-party = ["app"]  # Treat imports from the app package as first-party project imports
+
+[tool.ruff.format]  # Configure Ruff's code formatter
+quote-style = "double"  # Standardise Python strings on double quotes
+indent-style = "space"  # Standardise indentation using spaces rather than tabs
+line-ending = "auto"  # Preserve the appropriate platform line-ending behaviour
+
+[tool.pytest.ini_options]  # Configure pytest for the complete project
+testpaths = ["tests"]  # Search for automated tests only inside the tests directory
+asyncio_mode = "auto"  # Automatically execute async test functions using pytest-asyncio
+addopts = "-ra --strict-config --strict-markers --cov=app --cov-report=term-missing --cov-fail-under=80"  # Run strict tests and require at least 80 percent application coverage
+
+[tool.mypy]  # Configure static type checking for the application
+python_version = "3.11"  # Type-check against the Python version used by JogoCanal
+plugins = ["pydantic.mypy"]  # Allow mypy to understand Pydantic model behaviour more accurately
+check_untyped_defs = true  # Inspect function bodies even if third-party code lacks complete annotations
+disallow_untyped_defs = true  # Require every application function to declare its argument and return types
+no_implicit_optional = true  # Require optional values to be explicitly represented in type annotations
+warn_redundant_casts = true  # Warn when code contains unnecessary type casts
+warn_return_any = true  # Warn when a typed function accidentally returns an Any value
+warn_unused_ignores = true  # Warn when obsolete mypy ignore comments remain in the code
+
+[tool.coverage.run]  # Configure how test coverage measures application execution
+branch = true  # Measure conditional branches in addition to executed source lines
+source = ["app"]  # Measure coverage only for the JogoCanal application package
+
+[tool.coverage.report]  # Configure terminal coverage reporting
+show_missing = true  # Show the exact source lines that were not executed by tests
+skip_covered = true  # Hide files that already have complete coverage from the detailed report

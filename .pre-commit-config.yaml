@@ -1,0 +1,20 @@
+repos:  # Define the checks that pre-commit should execute before Git creates a commit
+  - repo: local  # Use the quality tools installed inside the project's own virtual environment
+    hooks:  # Define the individual local quality checks
+      - id: ruff-check  # Give the Ruff linting hook a stable internal identifier
+        name: Ruff lint  # Display a readable hook name when pre-commit runs
+        entry: python -m ruff check .  # Run Ruff linting against the complete repository
+        language: system  # Use the Python environment already activated for the project
+        pass_filenames: false  # Prevent pre-commit from appending individual filenames to the repository-wide command
+
+      - id: ruff-format-check  # Give the Ruff formatting hook a stable internal identifier
+        name: Ruff format check  # Display a readable hook name when pre-commit runs
+        entry: python -m ruff format --check .  # Verify that committed Python files already follow Ruff formatting
+        language: system  # Use the Ruff installation from the active project environment
+        pass_filenames: false  # Run one repository-wide formatting check instead of one command per changed file
+
+      - id: mypy  # Give the static type-checking hook a stable internal identifier
+        name: Mypy  # Display the type-checking hook name during commits
+        entry: python -m mypy app  # Type-check the complete application package before allowing the commit
+        language: system  # Use mypy from the project's active virtual environment
+        pass_filenames: false  # Prevent changed filenames from being appended to the application-wide command
