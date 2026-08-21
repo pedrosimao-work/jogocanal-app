@@ -26,6 +26,7 @@ class Settings(
     debug: bool = (
         False  # Disable FastAPI debug behaviour unless an environment explicitly enables it
     )
+    database_url: str = "sqlite+aiosqlite:///./jogocanal.db"  # Define the asynchronous local database connection URL
 
     model_config = SettingsConfigDict(  # Configure how Pydantic loads application settings
         env_file=".env",  # Allow local development settings to be loaded from a private .env file

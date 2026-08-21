@@ -40,5 +40,13 @@ jobs:
       - name: Run mypy
         run: python -m mypy app
 
+      - name: Verify database migrations
+        run: |
+          python -m alembic upgrade head
+          python -m alembic check
+          python -m alembic downgrade base
+          python -m alembic upgrade head
+          python -m alembic check
+
       - name: Run pytest
         run: python -m pytest

@@ -1,3 +1,6 @@
 a2wsgi==1.10.10  # Provide the ASGI-to-WSGI compatibility adapter required by the DirectAdmin Passenger deployment
 fastapi==0.141.1  # Provide the FastAPI web framework used by the application
 pydantic-settings==2.15.0  # Provide typed application configuration loaded from environment variables
+alembic==1.19.1  # Provide version-controlled relational database schema migrations
+aiosqlite==0.22.1  # Provide the asynchronous SQLite driver used during local development
+SQLAlchemy[asyncio]==2.0.52  # Provide the SQLAlchemy ORM and its asynchronous database APIs
