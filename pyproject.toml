@@ -5,6 +5,7 @@ extend-exclude = ["wsgi.py"]  # Preserve the already-verified Passenger compatib
 
 [tool.ruff.lint]  # Configure which Ruff linting rule families are enabled
 select = ["E", "F", "I", "UP", "B", "SIM"]  # Check style errors, Python errors, imports, upgrades, common bugs, and simplifications
+ignore = ["E501"]  # Let Ruff formatting handle layout without failing on long comments or unbreakable strings
 
 [tool.ruff.lint.isort]  # Configure Ruff's built-in import sorting behaviour
 known-first-party = ["app"]  # Treat imports from the app package as first-party project imports

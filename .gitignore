@@ -219,3 +219,6 @@ __marimo__/
 
 # Ignore PyCharm project configuration files
 .idea/
+
+# Ignore the local JogoCanal development database.
+jogocanal.db
