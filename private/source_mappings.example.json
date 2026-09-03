@@ -1,0 +1,9 @@
+[
+  {
+    "club_slug": "example-club",
+    "provider_key": "primary-schedule",
+    "source_slug": "replace-with-private-source-identifier",
+    "source_slug": "https://example.invalid/replace-with-private-url",
+    "verified_at": "2026-08-21T00:00:00Z"
+  }
+]
