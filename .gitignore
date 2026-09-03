@@ -220,5 +220,8 @@ __marimo__/
 # Ignore PyCharm project configuration files
 .idea/
 
-# Ignore the local JogoCanal development database.
+# Ignore the local JogoCanal development database
 jogocanal.db
+
+# Ignore private operational source mappings containing production URLs
+private/source_mappings.json
