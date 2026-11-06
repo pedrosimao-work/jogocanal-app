@@ -11,7 +11,7 @@ from app.models.channel import Channel
 from app.models.club import Club, ClubSourceMapping
 from app.models.competition import Competition
 from app.models.mixins import utc_now
-from app.models.scrape import ScrapeRun, ScrapeRunEvent
+from app.models.scrape import ScrapeJob, ScrapeRun, ScrapeRunEvent
 from app.schemas.ingestion import MatchInput, SourceBatch
 from app.scraper.schemas import ScrapedMatch
 from app.services.ingestion import persist_run
@@ -144,6 +144,7 @@ async def scrape_pipeline(
     provider_key: str = "primary_schedule",
     delay: float = 0.5,
     trigger: Literal["scheduled", "manual"] = "scheduled",
+    job_id: int | None = None,
 ) -> tuple[int, str]:
     started = utc_now()
     async with sessions.begin() as session:
@@ -151,6 +152,11 @@ async def scrape_pipeline(
         session.add(run)
         await session.flush()
         run_id = run.id
+        if job_id is not None:
+            job = await session.get(ScrapeJob, job_id)
+            if job is None or job.status != "running":
+                raise ValueError("Manual job must be claimed before execution")
+            job.run_id = run_id
     try:
         return await _scrape_pipeline(
             sessions,

@@ -205,3 +205,29 @@ trusted proxy with correctly configured client-IP forwarding in production.
 `JOGOCANAL_ENVIRONMENT=production` enables Secure, host-prefixed cookies; production
 requires HTTPS. Admin responses are not cached. Expired sessions and throttle
 records are removed during login. No administrator credentials are committed.
+
+### Scraper dashboard and durable manual jobs (Issue #16)
+
+Open `/admin/scraper` after logging in to inspect the latest 20 runs and jobs,
+30 warnings/failures and 50 pending normalisation reviews. A manual request creates
+one durable database job. Repeated or concurrent requests reuse the active job.
+The HTTP request never runs the scraper, and closing the browser does not lose it.
+
+Run one queued job from the project root:
+
+```powershell
+python -m app.commands.work_scrape_jobs
+```
+
+Schedule this command every minute on the same host as the scheduled scraper.
+Both commands must use the same absolute `--lock-file` path and database. Exit 75
+means the lock is busy; the pending job remains queued for the next worker run.
+The worker records the run ID, completion or safe failure message. After an abrupt
+process death, the next worker marks the interrupted job/run failed and releases
+the slot; it does not automatically replay an uncertain update. An administrator
+can then request a new job. The database enforces at most one pending/running job.
+
+This is a single-host SQLite worker, not an in-process FastAPI background task.
+The worker requires the existing private source configuration and reviewed
+catalogue. Production worker/cron installation and live-source verification remain
+operational deployment steps, tracked with Issue #9; no production job was installed.
