@@ -182,3 +182,6 @@ The desktop table becomes mobile match cards. Local JavaScript filters teams, co
 
 ### Club directory (Issue #13)
 The directory reads confirmed memberships from the latest database season in divisions one and two. Active tracked clubs have dedicated /clubes/{slug} pages, using canonical IDs for their seven-day television schedule. Unknown or inactive clubs return 404. Crests are local assets.
+
+### Public API (Issue #14)
+GET /api/v1/matches returns seven Lisbon calendar days with start_date (default today), limit (1–100) and offset (0–10000). GET /api/v1/clubs returns the current directory grouped by division. GET /api/v1/clubs/{slug}/matches returns the same schedule contract for a tracked club. GET /api/v1/health checks database connectivity (503 when unavailable); /health remains the lightweight liveness endpoint. /docs describes the Pydantic schemas. Responses contain public display fields only.
