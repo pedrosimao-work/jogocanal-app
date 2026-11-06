@@ -1,0 +1,4 @@
+{
+  "competitions": [{"name": "Example Cup", "slug": "example-cup"}],
+  "channels": [{"name": "Example Channel", "slug": "example-channel"}]
+}
