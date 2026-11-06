@@ -16,25 +16,25 @@
     {% if schedule_unavailable %}
     <div class="surface" role="alert">{{ empty_state('A agenda está temporariamente indisponível', 'Tenta novamente dentro de alguns instantes.') }}</div>
     {% else %}
+    <div class="search-toolbar surface">
+      <label for="schedule-search" class="form-label">Encontra o teu jogo</label>
+      <input id="schedule-search" class="form-control" type="search" placeholder="Clube, competição ou canal…" autocomplete="off" aria-controls="schedule-results">
+      <p id="result-count" role="status" aria-live="polite">{{ days | map(attribute='matches') | map('length') | sum }} jogos</p>
+    </div>
     <nav class="schedule-days" aria-label="Dias da agenda">
       {% for day in days %}<a href="#day-{{ day.date.isoformat() }}"{% if loop.first %} aria-current="date"{% endif %}><strong>{{ day.label }}</strong><span>{{ day.date.strftime('%d/%m') }}</span></a>{% endfor %}
     </nav>
+    <div id="schedule-results">
     {% for day in days %}
     <section class="schedule-day surface" id="day-{{ day.date.isoformat() }}" aria-labelledby="heading-{{ day.date.isoformat() }}">
       <h3 id="heading-{{ day.date.isoformat() }}" class="day-heading">{{ day.label }} <span>{{ day.heading }}</span></h3>
       {% if day.matches %}
-      <ul class="schedule-list">
-        {% for match in day.matches %}
-        <li class="schedule-match">
-          <time datetime="{{ match.kickoff.isoformat() }}">{{ match.kickoff.strftime('%H:%M') }}</time>
-          <div class="match-teams"><strong>{{ match.home }} <span class="versus">–</span> {{ match.away }}</strong><span class="match-competition">{{ match.competition }}</span></div>
-          <ul class="channel-list" aria-label="Canais">{% for channel in match.channels %}<li>{{ channel }}</li>{% endfor %}</ul>
-        </li>
-        {% endfor %}
-      </ul>
+      {% include 'components/match_table.html' %}
       {% else %}<p class="day-empty">Ainda não há jogos com transmissão confirmada para este dia.</p>{% endif %}
     </section>
     {% endfor %}
+    </div>
+    <p id="search-empty" class="surface p-4" hidden>Não encontrámos jogos para esta pesquisa.</p>
     {% endif %}
   </section>
   <aside class="col-lg-4" aria-labelledby="clubs-heading">
@@ -52,3 +52,5 @@
 </div>
 <div class="info-strip"><span class="info-symbol" aria-hidden="true">i</span><p>Os horários e canais podem sofrer alterações. Confirma a programação junto do operador.</p></div>
 {% endblock %}
+
+{% block scripts %}<script src="{{ url_for('static', path='js/schedule.js') }}" defer></script>{% endblock %}
