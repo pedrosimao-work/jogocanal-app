@@ -185,3 +185,23 @@ The directory reads confirmed memberships from the latest database season in div
 
 ### Public API (Issue #14)
 GET /api/v1/matches returns seven Lisbon calendar days with start_date (default today), limit (1–100) and offset (0–10000). GET /api/v1/clubs returns the current directory grouped by division. GET /api/v1/clubs/{slug}/matches returns the same schedule contract for a tracked club. GET /api/v1/health checks database connectivity (503 when unavailable); /health remains the lightweight liveness endpoint. /docs describes the Pydantic schemas. Responses contain public display fields only.
+
+### Private administration (Issue #15)
+
+After `python -m alembic upgrade head`, create your administrator locally:
+
+```powershell
+python -m app.commands.create_admin your-email@example.com
+```
+
+Enter a unique 16–128-character passphrase at the hidden prompts, then open
+`http://127.0.0.1:8000/admin/login`. There is no default account or public registration.
+Passwords use salted scrypt (N=32768, r=8, p=3). Sessions expire after eight hours;
+only token hashes are stored in the database. Logout revokes the current session;
+disabling an account or changing its password hash invalidates existing sessions.
+Login and mutating forms require CSRF tokens. SQLite-backed limits allow five
+attempts per account and twenty per client IP per fifteen minutes. Run behind a
+trusted proxy with correctly configured client-IP forwarding in production.
+`JOGOCANAL_ENVIRONMENT=production` enables Secure, host-prefixed cookies; production
+requires HTTPS. Admin responses are not cached. Expired sessions and throttle
+records are removed during login. No administrator credentials are committed.

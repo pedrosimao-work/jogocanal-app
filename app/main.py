@@ -3,11 +3,13 @@ from pathlib import Path
 from fastapi import FastAPI  # Import FastAPI so the main application object can be created
 from fastapi.staticfiles import StaticFiles
 
+from app.admin.auth import router as admin_router
 from app.api.system import (
     router as system_router,
 )  # Import the router containing the application-level operational endpoints
 from app.api.v1.routes import router as public_router
 from app.core.config import settings  # Import the validated central application settings
+from app.core.security_headers import SecurityHeaders
 from app.web.routes import router as web_router
 
 
@@ -26,6 +28,8 @@ def create_app() -> FastAPI:  # Create and configure the FastAPI application
     )
     application.include_router(web_router)
     application.include_router(public_router)
+    application.include_router(admin_router)
+    application.add_middleware(SecurityHeaders)
 
     return application  # Return the fully configured FastAPI application instance
 
