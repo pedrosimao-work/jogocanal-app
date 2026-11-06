@@ -116,6 +116,7 @@ async def persist_run(
     *,
     trigger: Literal["scheduled", "manual"] = "scheduled",
     observed_at: datetime | None = None,
+    existing_run_id: int | None = None,
 ) -> int:
     """Own transactions; return the durable run ID. Callers serialize ingestion runs."""
     observed_at = observed_at or utc_now()
@@ -125,10 +126,16 @@ async def persist_run(
     if len({batch.reference for batch in batches}) != len(batches):
         raise ValueError("Source references must be unique within a run")
     async with sessions.begin() as session:
-        new_run = ScrapeRun(trigger=trigger, started_at=observed_at, status="running")
-        session.add(new_run)
-        await session.flush()
-        run_id = new_run.id
+        if existing_run_id is None:
+            new_run = ScrapeRun(trigger=trigger, started_at=observed_at, status="running")
+            session.add(new_run)
+            await session.flush()
+            run_id = new_run.id
+        else:
+            pending = await session.get(ScrapeRun, existing_run_id)
+            if pending is None or pending.status != "running" or pending.sources_attempted:
+                raise ValueError("Run is not available for persistence")
+            run_id = existing_run_id
     seen: set[str] = set()
     successful: list[SourceBatch] = []
     for batch in batches:

@@ -137,3 +137,13 @@ The caller must serialize runs; execution locking belongs to the scraper CLI
 issue. A database outage or process interruption can leave a run `running` for
 later operational recovery. This issue adds no schema migration, production
 database writes, network requests or scheduled jobs.
+
+## Scraper CLI
+
+Run `python -m app.commands.scrape --trigger manual` after configuring the private
+source and importing reviewed competition/channel catalogue entries. The CLI
+fetches the daily page and active tracked-club mappings, normalises names and
+persists source batches under a shared OS process lock. See
+[scraper operations and DirectAdmin cron](docs/operations/scraper-cron.md) for
+catalogue setup, exit codes, timeouts, locking and the cron command template.
+The production cron job has not been installed.
