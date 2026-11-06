@@ -6,6 +6,7 @@ from fastapi.staticfiles import StaticFiles
 from app.api.system import (
     router as system_router,
 )  # Import the router containing the application-level operational endpoints
+from app.api.v1.routes import router as public_router
 from app.core.config import settings  # Import the validated central application settings
 from app.web.routes import router as web_router
 
@@ -24,6 +25,7 @@ def create_app() -> FastAPI:  # Create and configure the FastAPI application
         "/static", StaticFiles(directory=Path(__file__).resolve().parent / "static"), name="static"
     )
     application.include_router(web_router)
+    application.include_router(public_router)
 
     return application  # Return the fully configured FastAPI application instance
 
