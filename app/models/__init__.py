@@ -1,6 +1,7 @@
 from sqlalchemy import MetaData  # Import MetaData for the exported Alembic metadata type
 
 from app.db.base import Base  # Import the common declarative base containing the shared metadata
+from app.models.admin_session import AdminSession, LoginThrottle
 from app.models.admin_user import (
     AdminUser,
 )  # Import the administrator model so SQLAlchemy registers its table
@@ -32,6 +33,8 @@ metadata: MetaData = Base.metadata  # Export the complete SQLAlchemy metadata co
 
 
 __all__ = (  # Explicitly define the model objects exported by the app.models package
+    "AdminSession",
+    "LoginThrottle",
     "AdminUser",  # Export the administrator model
     "Channel",  # Export the channel model
     "Club",  # Export the canonical club model

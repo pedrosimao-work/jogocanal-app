@@ -12,6 +12,8 @@ from sqlalchemy.orm import (
 from app.models import metadata  # Import the complete JogoCanal model metadata
 
 EXPECTED_TABLES = {  # Define every application table that must exist in the initial schema
+    "admin_sessions",
+    "login_throttles",
     "admin_users",  # Store private administrator accounts
     "channels",  # Store canonical broadcast channels
     "club_aliases",  # Store deterministic alternative club names
