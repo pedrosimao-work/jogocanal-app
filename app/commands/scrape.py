@@ -39,6 +39,7 @@ async def execute(args: argparse.Namespace) -> int:
                     fallback=fallback,
                     delay=args.delay,
                     trigger=args.trigger,
+                    job_id=getattr(args, "job_id", None),
                 )
             print(f"Scrape run {run_id}: {status}")
             return {"completed": 0, "partial": 3, "failed": 1}[status]

@@ -12,6 +12,7 @@ from sqlalchemy import (
     Integer,
     String,
     Text,
+    UniqueConstraint,
 )  # Import SQL column, foreign-key, and constraint types
 from sqlalchemy.orm import (
     Mapped,
@@ -137,6 +138,11 @@ class ScrapeJob(Base):  # Represent a durable request for a scraper execution
         "scrape_jobs"  # Store manual refresh requests independently from browser requests
     )
     __table_args__ = (  # Define valid durable-job lifecycle states
+        UniqueConstraint("active_slot", name="uq_scrape_jobs_active_slot"),
+        CheckConstraint(
+            "(status IN ('pending', 'running') AND active_slot = 1 AND active_slot IS NOT NULL) OR (status IN ('completed', 'failed') AND active_slot IS NULL)",
+            name="active_job_slot",
+        ),
         CheckConstraint(  # Restrict jobs to supported execution states
             "status IN ('pending', 'running', 'completed', 'failed')",  # Allow only known job states
             name="valid_status",  # Give the job-status constraint a stable name
@@ -144,6 +150,7 @@ class ScrapeJob(Base):  # Represent a durable request for a scraper execution
     )  # Finish the scrape-job table constraints
 
     id: Mapped[int] = mapped_column(Integer, primary_key=True)  # Create the scrape-job primary key
+    active_slot: Mapped[int | None] = mapped_column(Integer, nullable=True)
     status: Mapped[str] = mapped_column(
         String(20), default="pending", nullable=False
     )  # Track the durable job lifecycle
