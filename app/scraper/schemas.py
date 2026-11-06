@@ -40,6 +40,7 @@ class ScheduleSourceSelectors(
     channel_item_selector: str = Field(
         min_length=1
     )  # Identify each individual channel inside its container
+    status_selector: str | None = Field(default=None, min_length=1)
     start_date_selector: str = Field(min_length=1)  # Identify optional structured kickoff metadata
 
 
@@ -61,6 +62,7 @@ class ScrapedMatch(BaseModel):  # Represent one validated raw match returned by 
         frozen=True
     )  # Prevent downstream code from mutating parsed source data accidentally
 
+    source_status: str | None = Field(default=None, max_length=40)
     kickoff_at: datetime  # Store the parsed kickoff timestamp canonically in UTC
     home_name_raw: str = Field(
         min_length=1, max_length=160

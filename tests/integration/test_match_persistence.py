@@ -224,3 +224,26 @@ async def test_missing_catalogue_references_fail_safely(sessions, changes) -> No
     async with sessions() as session:
         assert (await session.get(ScrapeRun, run_id)).status == "failed"
         assert not list(await session.scalars(select(Match)))
+
+
+async def test_status_updates_reach_public_schedule(sessions):
+    from app.services.schedule import seven_day_schedule
+
+    await persist_run(
+        sessions,
+        (batch((match(source_status="AO VIVO"),)), batch((match(),), reference="club")),
+        observed_at=NOW,
+    )
+    async with sessions() as session:
+        assert (await seven_day_schedule(session, NOW.date()))[0].matches[
+            0
+        ].status_label == "AO VIVO"
+    await persist_run(
+        sessions,
+        (batch((match(source_status="TERMINADO"),)),),
+        observed_at=NOW + timedelta(minutes=5),
+    )
+    async with sessions() as session:
+        assert (await seven_day_schedule(session, NOW.date()))[0].matches[
+            0
+        ].status_label == "TERMINADO"

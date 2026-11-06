@@ -186,3 +186,15 @@ def test_config_errors_do_not_expose_private_input(tmp_path: Path) -> None:
     path.write_text('{"homepage_url": "private"}', encoding="utf-8")
     with pytest.raises(ScheduleSourceError, match="^Invalid schedule-source configuration$"):
         load_schedule_source_config(path)
+
+
+@pytest.mark.parametrize("status", ["AO VIVO", "ADIADO", "TERMINADO"])
+def test_optional_source_status_is_parsed(status):
+    selectors = CONFIG.selectors.model_copy(update={"status_selector": ".match-state"})
+    html = page().replace("</tr></table>", f'<td class="match-state">{status}</td></tr></table>')
+    assert (
+        parse_daily_schedule(html, selectors, reference_date=REFERENCE)[0].source_status == status
+    )
+    assert (
+        parse_daily_schedule(page(), selectors, reference_date=REFERENCE)[0].source_status is None
+    )

@@ -20,6 +20,7 @@ class MatchInput(BaseModel):
     needs_review: bool = False
     unknown_terms: int = Field(default=0, ge=0)
     source_updated_at: datetime | None = None
+    source_status: str | None = Field(default=None, max_length=40)
 
     @field_validator("kickoff_at", "source_updated_at")
     @classmethod

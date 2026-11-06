@@ -170,3 +170,17 @@ async def test_missing_catalogue_fails_without_creating_guessed_entities(factory
     async with factory() as session:
         assert not list(await session.scalars(select(Match)))
         assert not list(await session.scalars(select(Channel)))
+
+
+async def test_pipeline_carries_source_status(factory):
+    class StatusReader(Reader):
+        async def daily_schedule(self, *, reference_date):
+            items = await super().daily_schedule(reference_date=reference_date)
+            return tuple(item.model_copy(update={"source_status": "ADIADO"}) for item in items)
+
+    async with factory.begin() as session:
+        await seed_catalogue(session, CATALOGUE)
+    await scrape_pipeline(factory, StatusReader(), reference_date=date(2026, 11, 6))
+    async with factory() as session:
+        record = (await session.scalars(select(Match))).one()
+        assert record.source_status == "ADIADO"
