@@ -98,3 +98,42 @@ must retry their transaction on a uniqueness conflict; the service does not comm
 or roll back unrelated ingestion work.
 
 Tests use synthetic names and mocked Groq responses; no live Groq call is made.
+
+## Match persistence and scrape records
+
+`await persist_run(session_factory, batches, trigger="scheduled")` persists
+validated `SourceBatch` objects and returns a durable `ScrapeRun` ID. Each batch
+contains `MatchInput` records with raw/display names, UTC kickoff, existing
+competition/channel IDs, optional recognised club IDs, review metadata and an
+optional source revision timestamp. The persistence boundary does not create
+canonical entities from AI suggestions. Resolving catalogue IDs and fetching
+pages are responsibilities of the ingestion caller.
+
+The fingerprint hashes the generic provider key, UTC kickoff, competition ID and
+ordered team identities (club IDs when known, otherwise normalized display names).
+Daily and club pages from the same provider therefore deduplicate. Channels are
+unioned across duplicate observations in one run; a subsequent run replaces the
+previous channel set. Kickoff changes or newly resolved club identities produce a
+new fingerprint; old records remain available and can become stale within a
+confirmed coverage window. No fuzzy rescheduling guesses are made.
+
+Each source batch and its successful counters/events commit atomically. A failed
+batch rolls back its matches and channel links, then records a generic error in a
+separate transaction. Other sources can succeed, yielding a `partial` run. Runs
+record attempted/successful sources, parsed observations, inserts, updates,
+caller-supplied unknown-term counts and errors. Source references are generic
+identifiers, not operational URLs; raw exception text is never stored in events.
+
+Stale marking requires `complete=True` and an explicit UTC half-open coverage
+window (`window_start <= kickoff < window_end`). `club_id` optionally narrows that
+scope. Failed, partial and unconfirmed empty results never mark records stale.
+Empty confirmed coverage additionally requires `allow_empty=True`. Only unseen
+future matches belonging to that provider/scope are marked, never deleted. A
+match seen by any successful source in the run is protected. Reappearance clears
+the stale flag. Older observations or older/missing revisions cannot overwrite
+newer stored data.
+
+The caller must serialize runs; execution locking belongs to the scraper CLI
+issue. A database outage or process interruption can leave a run `running` for
+later operational recovery. This issue adds no schema migration, production
+database writes, network requests or scheduled jobs.
