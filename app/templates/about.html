@@ -1,12 +1,13 @@
 {% extends 'base.html' %}
 {% from 'components/macros.html' import page_heading %}
 {% block content %}
-{{ page_heading('SOBRE O JOGOCANAL', 'O teu jogo. O teu canal.', 'Uma forma simples de descobrir onde ver futebol em Portugal.') }}
+{{ page_heading('SOBRE O JOGOCANAL', 'Quem Somos', 'Uma forma simples de descobrir onde ver futebol em Portugal.') }}
 <article class="surface about-copy">
   <h2>Mais perto do jogo.</h2>
   <p>O JogoCanal reúne informação sobre jogos de futebol e os canais que os transmitem em Portugal. A ideia é simples: ajudar-te a encontrar o jogo, sem perder tempo à procura.</p>
   <p>Os horários são apresentados na hora de Portugal continental. A programação pode mudar; confirma sempre a transmissão junto do teu operador.</p>
   <p>O JogoCanal é um guia de programação. Não disponibiliza transmissões de jogos.</p>
+  <p>Este é um projeto independente, desenvolvido por <a href="https://pedrosimao.work">pedrosimao.work</a>. Para sugestões ou correções, contacta <a href="mailto:info@jogocanal.com">info@jogocanal.com</a>.</p>
   <a class="btn btn-dark-green" href="{{ url_for('agenda') }}">Ir para a agenda <span aria-hidden="true">→</span></a>
 </article>
 {% endblock %}

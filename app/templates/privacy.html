@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+{% from 'components/macros.html' import page_heading %}
+{% block content %}
+{{ page_heading('INFORMAÇÃO', 'Política de Privacidade', 'Como esta versão do JogoCanal utiliza dados e cookies.') }}
+<article class="surface about-copy legal-copy">
+  <p class="small text-secondary">Versão de 6 de novembro de 2026</p>
+  <h2>Contacto do projeto</h2>
+  <p>Para questões sobre os teus dados no JogoCanal, contacta <a href="mailto:info@jogocanal.com">info@jogocanal.com</a>.</p>
+  <h2>Consulta da agenda</h2>
+  <p>A agenda pública não exige conta. Esta versão da aplicação não inclui publicidade personalizada, ferramentas de análise de audiência nem cookies de acompanhamento. A pesquisa de jogos é feita no teu navegador, sem enviar o texto pesquisado ao servidor.</p>
+  <p>O servidor e o alojamento podem registar dados técnicos dos pedidos, incluindo endereço IP, data, recurso pedido e resultado da resposta, para operação e segurança. A configuração e a conservação destes registos dependem do ambiente de alojamento. Podes solicitar os detalhes aplicáveis através do contacto acima.</p>
+  <h2>Área de administração</h2>
+  <p>As contas são criadas apenas para administradores autorizados. Guardamos o email, uma representação protegida da palavra-passe e informação de acesso necessária para gerir a conta. Não guardamos palavras-passe em texto simples.</p>
+  <p>A autenticação usa cookies estritamente necessários: um token de formulário com duração máxima de 30 minutos e uma sessão com duração máxima de oito horas. Sair revoga a sessão. Para limitar tentativas de acesso, são usados identificadores derivados do email e do IP em janelas de 15 minutos. Os registos expirados de sessão e de limitação são removidos numa tentativa posterior de início de sessão.</p>
+  <h2>Mensagens e serviços técnicos</h2>
+  <p>Se nos contactares por email, o endereço e o conteúdo da mensagem são usados para responder ao teu pedido. Não envies dados sensíveis que não sejam necessários. O alojamento e o serviço de email utilizados na operação podem tratar os dados necessários à prestação desses serviços; os detalhes do ambiente de produção devem ser confirmados com o projeto.</p>
+  <h2>Os teus direitos</h2>
+  <p>Podes contactar-nos para pedir informação, acesso, correção ou eliminação dos teus dados e exercer outros direitos aplicáveis. Encontras informação sobre estes direitos e sobre a autoridade de controlo na <a href="https://www.cnpd.pt/cidadaos/direitos/">Comissão Nacional de Proteção de Dados</a>.</p>
+  <h2>Atualizações</h2>
+  <p>Esta página descreve as funcionalidades desta versão. Será revista quando forem introduzidos novos tratamentos de dados ou definidos os detalhes de alojamento. A data acima identifica a versão publicada.</p>
+</article>
+{% endblock %}
