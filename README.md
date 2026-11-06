@@ -176,3 +176,6 @@ raw source names are not passed to templates. A database failure returns a safe
 503 state rather than an empty schedule. Reading the agenda never triggers a
 scrape or writes to the database. Search, counters and match status controls are
 reserved for Issue #12; the visual walkthrough follows that issue.
+
+### Responsive schedule (Issue #12)
+The desktop table becomes mobile match cards. Local JavaScript filters teams, competitions and channels immediately, ignoring accents and case, and announces the visible count. All matches remain readable without JavaScript. Live, postponed and finished states require a recognised source status; upcoming within one hour is A SEGUIR. Past kickoffs without a source status remain POR CONFIRMAR; elapsed time alone never claims a match is live or finished.

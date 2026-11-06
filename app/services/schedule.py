@@ -40,6 +40,27 @@ def lisbon_today() -> date:
     return datetime.now(LISBON).date()
 
 
+def public_status(source: str | None, kickoff: datetime, now: datetime) -> tuple[str, str]:
+    """Only authoritative source states imply live play or a completed match."""
+    states = {
+        "live": ("live", "AO VIVO"),
+        "ao vivo": ("live", "AO VIVO"),
+        "in_progress": ("live", "AO VIVO"),
+        "postponed": ("postponed", "ADIADO"),
+        "adiado": ("postponed", "ADIADO"),
+        "finished": ("finished", "TERMINADO"),
+        "completed": ("finished", "TERMINADO"),
+        "terminado": ("finished", "TERMINADO"),
+        "cancelled": ("postponed", "CANCELADO"),
+    }
+    if source and source.strip().casefold() in states:
+        return states[source.strip().casefold()]
+    seconds = (kickoff.astimezone(UTC) - now.astimezone(UTC)).total_seconds()
+    if 0 <= seconds <= 3600:
+        return "next", "A SEGUIR"
+    return ("scheduled", "AGENDADO") if seconds > 0 else ("unknown", "POR CONFIRMAR")
+
+
 def schedule_bounds(today: date) -> tuple[datetime, datetime]:
     return (
         datetime.combine(today, time.min, LISBON).astimezone(UTC),
@@ -55,6 +76,8 @@ class ScheduleMatch:
     away: str
     competition: str
     channels: tuple[str, ...]
+    status: str = "scheduled"
+    status_label: str = "AGENDADO"
 
 
 @dataclass
@@ -108,6 +131,7 @@ async def seven_day_schedule(session: AsyncSession, today: date) -> list[Schedul
                 tuple(
                     sorted({link.channel.name for link in record.channel_links}, key=str.casefold)
                 ),
+                *public_status(record.source_status, kickoff, datetime.now(UTC)),
             )
         )
     return days

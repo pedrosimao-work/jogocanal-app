@@ -1,0 +1,14 @@
+<table class="match-table">
+  <caption class="visually-hidden">Jogos de {{ day.heading }}</caption>
+  <thead><tr><th scope="col">Hora</th><th scope="col">Jogo / competição</th><th scope="col">Transmissão</th><th scope="col">Estado</th></tr></thead>
+  <tbody>
+  {% for match in day.matches %}
+    <tr class="schedule-match" data-search="{{ match.home }} {{ match.away }} {{ match.competition }} {{ match.channels | join(' ') }}">
+      <td class="match-time"><time datetime="{{ match.kickoff.isoformat() }}">{{ match.kickoff.strftime('%H:%M') }}</time></td>
+      <td class="match-teams"><strong>{{ match.home }} <span class="versus">–</span> {{ match.away }}</strong><span class="match-competition">{{ match.competition }}</span></td>
+      <td><ul class="channel-list" aria-label="Canais">{% for channel in match.channels %}<li>{{ channel }}</li>{% endfor %}</ul></td>
+      <td><span class="match-status status-{{ match.status }}">{{ match.status_label }}</span></td>
+    </tr>
+  {% endfor %}
+  </tbody>
+</table>
