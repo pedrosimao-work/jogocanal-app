@@ -1,0 +1,1 @@
+"""JogoCanal test suite."""
