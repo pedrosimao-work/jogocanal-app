@@ -5,6 +5,7 @@ from typing import (
     Literal,
 )  # Import Literal so the allowed application environments can be restricted
 
+from pydantic import Field, SecretStr
 from pydantic_settings import (
     BaseSettings,
     SettingsConfigDict,
@@ -27,6 +28,8 @@ class Settings(
         False  # Disable FastAPI debug behaviour unless an environment explicitly enables it
     )
     database_url: str = "sqlite+aiosqlite:///./jogocanal.db"  # Define the asynchronous local database connection URL
+    groq_api_key: SecretStr | None = None
+    groq_model: str | None = Field(default=None, min_length=1, max_length=120)
 
     model_config = SettingsConfigDict(  # Configure how Pydantic loads application settings
         env_file=".env",  # Allow local development settings to be loaded from a private .env file

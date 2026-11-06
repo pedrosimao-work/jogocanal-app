@@ -62,3 +62,39 @@ matches, normalize names or schedule scraping jobs; those belong to later issues
 Tests use synthetic HTML and HTTPX mock transports, never production pages.
 Live compatibility must be checked in an environment that can reach the private
 source; the implementation environment could not connect to either sampled page.
+
+## Name normalisation
+
+`NameNormaliser(session, fallback=None)` resolves `club`, `competition` and
+`channel` names asynchronously. Call `await normaliser.normalise(raw_name, context)`
+to obtain a `NormalisedName` containing the display value, resolution method,
+review flag and whether the result came from the cache.
+
+Lookup keys fold case and accents, normalize whitespace and punctuation, and
+preserve team suffixes, channel numbers and `+`. Manual cache entries take
+precedence, followed by active canonical database names/slugs and club aliases.
+Successful AI suggestions are reused from the existing `normalisation_cache`
+table, scoped by context, with usage counters and timestamps. A newly added
+deterministic match takes precedence over an older AI cache entry.
+
+For optional Groq fallback, configure `JOGOCANAL_GROQ_API_KEY` and
+`JOGOCANAL_GROQ_MODEL` privately. Construct
+`GroqNormaliser(settings.groq_api_key, settings.groq_model)` only when both are
+configured, use it as an async context manager, and pass it to `NameNormaliser`.
+Choose a currently available model supporting JSON mode. The adapter follows
+[Groq's chat completion API](https://console.groq.com/docs/api-reference), validates
+the returned JSON locally and limits each request to 15 seconds and 128 output
+tokens. Only the unknown name and its entity context are sent, never schedule
+URLs or source configuration. There are no automatic retries of paid requests.
+
+AI suggestions always require review and never create canonical entity records.
+Disabled fallback, uncertainty, invalid responses and HTTP failures return the
+original cleaned name as `unresolved`, requiring review, without caching a failed
+lookup. This allows a later attempt to recover. The caller owns the database
+transaction and must commit to persist cache writes and usage counts. The service
+must not share an AsyncSession between concurrent tasks.
+The database unique constraint prevents duplicate cache keys. Concurrent writers
+must retry their transaction on a uniqueness conflict; the service does not commit
+or roll back unrelated ingestion work.
+
+Tests use synthetic names and mocked Groq responses; no live Groq call is made.
