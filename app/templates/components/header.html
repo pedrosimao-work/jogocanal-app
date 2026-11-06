@@ -1,0 +1,19 @@
+<header class="site-header">
+  <nav class="navbar navbar-expand-md container" aria-label="Navegação principal">
+    <a class="navbar-brand brand" href="{{ url_for('agenda') }}" aria-label="JogoCanal — início">
+      <img src="{{ url_for('static', path='brand/mark.svg') }}" width="38" height="38" alt="">
+      <span>Jogo<span class="brand-accent">Canal</span><small>O TEU JOGO. O TEU CANAL.</small></span>
+    </a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#main-navigation" aria-controls="main-navigation" aria-expanded="false" aria-label="Abrir ou fechar menu">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="main-navigation">
+      <ul class="navbar-nav mx-auto gap-md-2">
+        {% for route, label, active_page in [('agenda', 'Agenda', 'agenda'), ('clubs', 'Clubes', 'clubs'), ('about', 'Sobre', 'about')] %}
+        <li class="nav-item"><a class="nav-link{% if page == active_page %} active{% endif %}" href="{{ url_for(route) }}"{% if page == active_page %} aria-current="page"{% endif %}>{{ label }}</a></li>
+        {% endfor %}
+      </ul>
+      <span class="timezone-label"><span aria-hidden="true">◷</span> Hora de Portugal</span>
+    </div>
+  </nav>
+</header>

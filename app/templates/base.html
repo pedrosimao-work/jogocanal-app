@@ -1,0 +1,24 @@
+<!doctype html>
+<html lang="pt-PT">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Descobre onde e quando ver futebol na televisão em Portugal. JogoCanal: o teu jogo, o teu canal.">
+  <meta name="theme-color" content="#12392f">
+  <title>{{ title }} · JogoCanal</title>
+  <link rel="icon" type="image/svg+xml" href="{{ url_for('static', path='brand/mark.svg') }}">
+  <link rel="stylesheet" href="{{ url_for('static', path='vendor/bootstrap/bootstrap.min.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', path='css/app.css') }}">
+  {% block head %}{% endblock %}
+</head>
+<body>
+  <a class="skip-link" href="#main-content">Saltar para o conteúdo</a>
+  {% include 'components/header.html' %}
+  <main id="main-content" class="container page-content" tabindex="-1">
+    {% block content %}{% endblock %}
+  </main>
+  {% include 'components/footer.html' %}
+  <script src="{{ url_for('static', path='vendor/bootstrap/bootstrap.bundle.min.js') }}" defer></script>
+  {% block scripts %}{% endblock %}
+</body>
+</html>
