@@ -159,6 +159,9 @@ def _parse(
                         competition_raw=row_competition,
                         channels_raw=channels,
                         source_kind=kind,
+                        source_status=(_text(row.select_one(selectors.status_selector)) or None)
+                        if selectors.status_selector
+                        else None,
                         source_reference=source_reference,
                     )
                 )

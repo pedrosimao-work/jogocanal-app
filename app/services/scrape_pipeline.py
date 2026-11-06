@@ -65,6 +65,7 @@ async def prepare_match(
     unknown = sum(value.needs_review for value in [home, away, competition, *channels])
     return MatchInput(
         kickoff_at=item.kickoff_at,
+        source_status=item.source_status,
         home_name_raw=item.home_name_raw,
         away_name_raw=item.away_name_raw,
         home_name_display=home.value,

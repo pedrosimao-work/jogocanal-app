@@ -86,6 +86,8 @@ async def _upsert(
     record.competition_id = item.competition_id
     record.provider_key = provider
     record.source_updated_at = item.source_updated_at
+    if not merge_channels or item.source_status is not None:
+        record.source_status = item.source_status
     record.last_seen_at = observed_at
     record.is_stale = False
     record.needs_review = (

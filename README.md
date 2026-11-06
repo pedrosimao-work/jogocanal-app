@@ -231,3 +231,5 @@ This is a single-host SQLite worker, not an in-process FastAPI background task.
 The worker requires the existing private source configuration and reviewed
 catalogue. Production worker/cron installation and live-source verification remain
 operational deployment steps, tracked with Issue #9; no production job was installed.
+
+The private selector profile optionally accepts status_selector. When configured, source match statuses flow through parsing, normalisation and persistence into public badges. An unconfigured or absent status stays unknown; no live state is invented. A duplicate club-page row without a status does not erase a status present on the same run's daily page. Live-source selector compatibility still requires private verification.
