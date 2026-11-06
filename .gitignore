@@ -225,3 +225,6 @@ jogocanal.db
 
 # Ignore private operational source mappings containing production URLs
 private/source_mappings.json
+
+# Ignore private schedule-source URL and live HTML selector configuration
+private/schedule_source.json

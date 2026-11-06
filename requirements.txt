@@ -4,3 +4,6 @@ pydantic-settings==2.15.0  # Provide typed application configuration loaded from
 alembic==1.19.1  # Provide version-controlled relational database schema migrations
 aiosqlite==0.22.1  # Provide the asynchronous SQLite driver used during local development
 SQLAlchemy[asyncio]==2.0.52  # Provide the SQLAlchemy ORM and its asynchronous database APIs
+beautifulsoup4==4.15.0  # Parse external schedule HTML into structured application data
+httpx==0.28.1  # Provide the reusable asynchronous HTTP client used by the ingestion pipeline
+tzdata==2026.6  # Supply IANA timezones on Windows for local schedule timestamps

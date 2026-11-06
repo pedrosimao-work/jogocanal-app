@@ -1,0 +1,16 @@
+{
+  "homepage_url": "https://example.invalid/schedule",
+  "selectors": {
+    "table_selector": "table.schedule",
+    "club_table_selector": "table.schedule.club",
+    "date_header_class": "date-header",
+    "competition_header_class": "competition-header",
+    "time_selector": "td.time",
+    "home_selector": "td.home span",
+    "away_selector": "td.away span",
+    "club_competition_selector": "td.details label",
+    "channels_container_selector": "td.channels",
+    "channel_item_selector": "ul.channel-list li",
+    "start_date_selector": "meta[itemprop=\"startDate\"]"
+  }
+}
