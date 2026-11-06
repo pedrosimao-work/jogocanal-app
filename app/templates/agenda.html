@@ -13,7 +13,29 @@
 <div class="row g-4 mt-2" id="agenda">
   <section class="col-lg-8" aria-labelledby="agenda-heading">
     <div class="section-heading"><div><p class="eyebrow">A NÃO PERDER</p><h2 id="agenda-heading">Agenda de jogos</h2></div><span class="section-note">Horários de Portugal</span></div>
-    <div class="surface">{{ empty_state('A agenda está a ser preparada', 'Em breve, os jogos e os canais para acompanhares cada momento.') }}</div>
+    {% if schedule_unavailable %}
+    <div class="surface" role="alert">{{ empty_state('A agenda está temporariamente indisponível', 'Tenta novamente dentro de alguns instantes.') }}</div>
+    {% else %}
+    <nav class="schedule-days" aria-label="Dias da agenda">
+      {% for day in days %}<a href="#day-{{ day.date.isoformat() }}"{% if loop.first %} aria-current="date"{% endif %}><strong>{{ day.label }}</strong><span>{{ day.date.strftime('%d/%m') }}</span></a>{% endfor %}
+    </nav>
+    {% for day in days %}
+    <section class="schedule-day surface" id="day-{{ day.date.isoformat() }}" aria-labelledby="heading-{{ day.date.isoformat() }}">
+      <h3 id="heading-{{ day.date.isoformat() }}" class="day-heading">{{ day.label }} <span>{{ day.heading }}</span></h3>
+      {% if day.matches %}
+      <ul class="schedule-list">
+        {% for match in day.matches %}
+        <li class="schedule-match">
+          <time datetime="{{ match.kickoff.isoformat() }}">{{ match.kickoff.strftime('%H:%M') }}</time>
+          <div class="match-teams"><strong>{{ match.home }} <span class="versus">–</span> {{ match.away }}</strong><span class="match-competition">{{ match.competition }}</span></div>
+          <ul class="channel-list" aria-label="Canais">{% for channel in match.channels %}<li>{{ channel }}</li>{% endfor %}</ul>
+        </li>
+        {% endfor %}
+      </ul>
+      {% else %}<p class="day-empty">Ainda não há jogos com transmissão confirmada para este dia.</p>{% endif %}
+    </section>
+    {% endfor %}
+    {% endif %}
   </section>
   <aside class="col-lg-4" aria-labelledby="clubs-heading">
     <div class="section-heading"><div><p class="eyebrow">AS TUAS CORES</p><h2 id="clubs-heading">Sempre com o teu clube</h2></div></div>

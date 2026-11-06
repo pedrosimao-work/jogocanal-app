@@ -154,10 +154,25 @@ The public interface uses FastAPI routes, Jinja templates and locally served
 Bootstrap 5.3.8. Start it with `python -m uvicorn app.main:app --reload`, then visit
 `http://127.0.0.1:8000/`. The shared shell includes responsive navigation,
 Portuguese labels, an accessible skip link, active-page state and reusable heading
-and empty-state macros. `/clubes` is a placeholder until the club directory issue;
-the agenda shell does not yet query or display matches.
+and empty-state macros. `/clubes` is a placeholder until the club directory issue.
+The agenda reads persisted televised matches for today and the next six days.
 
 Templates live in `app/templates`, web routes in `app/web/routes.py`, and custom
 branding/styles in `app/static/brand` and `app/static/css`. Bootstrap files are
 vendored under `app/static/vendor/bootstrap` with their MIT licence, so rendering
 and navigation do not depend on a third-party CDN. No build step is required.
+
+### Seven-day schedule
+
+The agenda includes every kickoff from 00:00 through 23:59 in Europe/Lisbon,
+including games earlier today. Local midnight boundaries are converted to UTC
+before querying; daylight-saving weeks can contain 167 or 169 hours. Records are
+ordered by UTC kickoff and ID, then grouped by Lisbon date. Empty dates remain
+visible. Stale matches and records without channel relationships are excluded.
+
+Public template data contains only match IDs, local kickoff timestamps, display
+names, competitions and channels. Private source URLs, provider identifiers and
+raw source names are not passed to templates. A database failure returns a safe
+503 state rather than an empty schedule. Reading the agenda never triggers a
+scrape or writes to the database. Search, counters and match status controls are
+reserved for Issue #12; the visual walkthrough follows that issue.
