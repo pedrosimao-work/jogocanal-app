@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+{% from 'components/macros.html' import empty_state %}
+{% block content %}
+<a class="text-link" href="{{ url_for('clubs') }}">← Todos os clubes</a>
+<header class="club-profile surface my-4">
+  {% if club.crest_path %}<img src="{{ url_for('static', path=club.crest_path) }}" alt="" width="96" height="96">{% endif %}
+  <div><p class="eyebrow">AS TUAS CORES</p><h1>{{ club.name }}</h1><p class="mb-0">Jogos na televisão · próximos sete dias · hora de Portugal</p></div>
+</header>
+{% set matches = days | map(attribute='matches') | map('length') | sum %}
+{% if matches %}
+{% for day in days if day.matches %}<section class="schedule-day surface"><h2 class="day-heading">{{ day.label }} <span>{{ day.heading }}</span></h2>{% include 'components/match_table.html' %}</section>{% endfor %}
+{% else %}<section class="surface">{{ empty_state('Sem jogos com transmissão confirmada', 'Consulta novamente mais tarde. Os horários e canais podem sofrer alterações.') }}</section>{% endif %}
+{% endblock %}

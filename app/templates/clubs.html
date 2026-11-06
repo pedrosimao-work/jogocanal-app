@@ -2,6 +2,18 @@
 {% from 'components/macros.html' import page_heading, empty_state %}
 {% block content %}
 {{ page_heading('AS TUAS CORES', 'O futebol tem muitas casas.', 'Encontra o teu clube e acompanha os jogos que mais te interessam.') }}
-<section class="surface" aria-label="Clubes">{{ empty_state('Os clubes estão a chegar', 'Estamos a preparar um espaço para acompanhares as tuas equipas.') }}</section>
+{% for division in divisions %}
+<section class="mb-5" aria-labelledby="division-{{ loop.index }}">
+  <div class="section-heading"><h2 id="division-{{ loop.index }}">{{ division.name }}</h2><span class="section-note">Época {{ division.season }}</span></div>
+  <div class="club-grid">
+  {% for club in division.clubs %}
+    <a class="club-tile surface" href="{{ url_for('club_detail', slug=club.slug) }}">
+      {% if club.crest_path %}<img src="{{ url_for('static', path=club.crest_path) }}" alt="" width="64" height="64">{% else %}<span class="crest-placeholder" aria-hidden="true">JC</span>{% endif %}
+      <strong>{{ club.name }}</strong><span>Ver jogos →</span>
+    </a>
+  {% endfor %}
+  </div>
+</section>
+{% else %}<section class="surface">{{ empty_state('Sem clubes disponíveis', 'O diretório será atualizado assim que os clubes forem confirmados.') }}</section>{% endfor %}
 <a class="text-link d-inline-block mt-4" href="{{ url_for('agenda') }}">← Voltar à agenda</a>
 {% endblock %}

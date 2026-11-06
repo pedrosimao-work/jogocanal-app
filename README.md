@@ -179,3 +179,6 @@ reserved for Issue #12; the visual walkthrough follows that issue.
 
 ### Responsive schedule (Issue #12)
 The desktop table becomes mobile match cards. Local JavaScript filters teams, competitions and channels immediately, ignoring accents and case, and announces the visible count. All matches remain readable without JavaScript. Live, postponed and finished states require a recognised source status; upcoming within one hour is A SEGUIR. Past kickoffs without a source status remain POR CONFIRMAR; elapsed time alone never claims a match is live or finished.
+
+### Club directory (Issue #13)
+The directory reads confirmed memberships from the latest database season in divisions one and two. Active tracked clubs have dedicated /clubes/{slug} pages, using canonical IDs for their seven-day television schedule. Unknown or inactive clubs return 404. Crests are local assets.

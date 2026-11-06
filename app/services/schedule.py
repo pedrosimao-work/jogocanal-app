@@ -78,6 +78,8 @@ class ScheduleMatch:
     channels: tuple[str, ...]
     status: str = "scheduled"
     status_label: str = "AGENDADO"
+    home_club_id: int | None = None
+    away_club_id: int | None = None
 
 
 @dataclass
@@ -132,6 +134,8 @@ async def seven_day_schedule(session: AsyncSession, today: date) -> list[Schedul
                     sorted({link.channel.name for link in record.channel_links}, key=str.casefold)
                 ),
                 *public_status(record.source_status, kickoff, datetime.now(UTC)),
+                record.home_club_id,
+                record.away_club_id,
             )
         )
     return days

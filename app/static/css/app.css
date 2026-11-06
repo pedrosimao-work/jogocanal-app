@@ -512,3 +512,13 @@ a:focus-visible,button:focus-visible {
   .match-table td:nth-child(4) { grid-column:2; }
   .match-table .channel-list { margin:0; max-width:none; width:auto; }
 }
+.club-grid { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:16px; }
+.club-tile { padding:25px 18px; display:flex; align-items:center; text-align:center; flex-direction:column; gap:15px; text-decoration:none; color:var(--jc-ink); transition:border-color .15s; }
+.club-tile:hover { border-color:#34785a; background:#f6faef; }
+.club-tile img,.club-profile img { object-fit:contain; }
+.club-tile strong { font-size:.9rem; }
+.club-tile span { color:var(--jc-muted); font-size:.72rem; }
+.club-profile { display:flex; align-items:center; gap:28px; padding:32px; }
+.club-profile h1 { font-size:2rem; font-weight:800; }
+.club-profile p { color:var(--jc-muted); font-size:.85rem; }
+@media(max-width:767px) { .club-grid { grid-template-columns:repeat(2,minmax(0,1fr)); } .club-profile { flex-direction:column; text-align:center; padding:24px; } }
