@@ -1,6 +1,10 @@
 <footer class="site-footer">
-  <div class="container d-flex flex-column flex-sm-row justify-content-between gap-3">
-    <p class="mb-0"><strong>JogoCanal</strong> <span>© {{ year }}</span></p>
-    <p class="mb-0">Futebol na televisão, sem complicações. <a href="{{ url_for('about') }}">Sobre o projeto <span aria-hidden="true">↗</span></a></p>
+  <div class="container">
+    <div class="footer-main">
+      <div><p class="footer-brand">JogoCanal</p><p>O teu jogo. O teu canal.<br>Futebol na televisão, sem complicações.</p></div>
+      <nav aria-label="Informação"><a href="{{ url_for('who_we_are') }}">Quem Somos</a><a href="{{ url_for('terms') }}">Termos e Condições</a><a href="{{ url_for('privacy') }}">Política de Privacidade</a></nav>
+      <div><p class="footer-label">FALA CONNOSCO</p><a href="mailto:info@jogocanal.com">info@jogocanal.com</a></div>
+    </div>
+    <div class="footer-bottom"><span>© {{ year }} JogoCanal</span><span>Desenvolvido por <a href="https://pedrosimao.work">pedrosimao.work</a></span></div>
   </div>
 </footer>

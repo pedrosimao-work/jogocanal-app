@@ -102,3 +102,18 @@ async def club_detail(
 @router.get("/sobre", response_class=HTMLResponse, name="about")
 async def about(request: Request) -> HTMLResponse:
     return render(request, "about", "Sobre o JogoCanal")
+
+
+@router.get("/quem-somos", response_class=HTMLResponse, name="who_we_are")
+async def who_we_are(request: Request) -> HTMLResponse:
+    return render(request, "about", "Quem Somos")
+
+
+@router.get("/termos-e-condicoes", response_class=HTMLResponse, name="terms")
+async def terms(request: Request) -> HTMLResponse:
+    return render(request, "terms", "Termos e Condições")
+
+
+@router.get("/politica-de-privacidade", response_class=HTMLResponse, name="privacy")
+async def privacy(request: Request) -> HTMLResponse:
+    return render(request, "privacy", "Política de Privacidade")

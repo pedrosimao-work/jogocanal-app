@@ -1,6 +1,31 @@
 # jogocanal-app
 FastAPI application for discovering where and when football matches are broadcast in Portugal.
 
+## Run locally in PyCharm
+
+Open the repository folder in PyCharm. Use Python 3.11 and select
+`.venv/Scripts/python.exe` as the project interpreter on Windows. If that environment
+has not been created yet, run `python -m venv .venv`, then
+`.\.venv\Scripts\python.exe -m pip install -r requirements-dev.txt`.
+
+From the repository root in the PyCharm PowerShell terminal:
+
+```powershell
+.\.venv\Scripts\python.exe -m alembic upgrade head
+.\.venv\Scripts\python.exe -m app.commands.seed_reference_data
+.\.venv\Scripts\python.exe -m uvicorn app.main:app --reload --host 127.0.0.1 --port 8000
+```
+
+Keep that terminal running and open **http://127.0.0.1:8000/** in your browser.
+The interface is rendered by FastAPI with Jinja and locally bundled Bootstrap.
+Opening a template file, GitHub source link or `/docs` does not show the website.
+Use `/clubes` for the directory and `/admin/login` for administration. Press Ctrl+C
+in the terminal to stop the server. No deployment is needed for this local review.
+
+A new database contains clubs but no invented fixtures. The agenda accurately shows
+empty days until an actual source update succeeds. The scraper and worker use the
+private configuration described below; they do not run just by starting the website.
+
 ## Reference data (2026/2027)
 
 The seed contains 36 clubs, two leagues, 36 season memberships and 79 aliases.
@@ -233,3 +258,13 @@ catalogue. Production worker/cron installation and live-source verification rema
 operational deployment steps, tracked with Issue #9; no production job was installed.
 
 The private selector profile optionally accepts status_selector. When configured, source match statuses flow through parsing, normalisation and persistence into public badges. An unconfigured or absent status stays unknown; no live state is invented. A duplicate club-page row without a status does not erase a status present on the same run's daily page. Live-source selector compatibility still requires private verification.
+
+### Information pages (Issue #17)
+
+`/quem-somos`, `/termos-e-condicoes` and `/politica-de-privacidade` share the global
+footer with info@jogocanal.com and the developer credit. `/sobre` remains available.
+The privacy text reflects the implemented application (no public analytics cookies,
+local search, administrator sessions and throttling). Operator identity, hosting,
+log retention and email-service arrangements must be confirmed for the actual
+production environment before publishing there; these deployment details have not
+been invented. Privacy-rights information links to the CNPD.

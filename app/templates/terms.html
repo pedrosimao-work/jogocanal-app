@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+{% from 'components/macros.html' import page_heading %}
+{% block content %}
+{{ page_heading('INFORMAÇÃO', 'Termos e Condições', 'Um guia para usares o JogoCanal com confiança.') }}
+<article class="surface about-copy legal-copy">
+  <p class="small text-secondary">Versão de 6 de novembro de 2026</p>
+  <h2>O que encontras no JogoCanal</h2>
+  <p>O JogoCanal é um projeto independente que reúne horários de futebol e informação sobre transmissões televisivas em Portugal. A consulta da agenda não exige registo nem pagamento ao JogoCanal.</p>
+  <h2>Horários e transmissões</h2>
+  <p>Os horários são apresentados na hora de Portugal continental. Competições, canais e horários podem mudar. Confirma a programação junto do operador antes do jogo. Uma indicação de transmissão não garante que o canal esteja incluído no teu serviço.</p>
+  <p>O JogoCanal não transmite jogos, não vende subscrições televisivas e não disponibiliza ligações para transmissões não autorizadas. Os estados dos jogos dependem da informação disponível; não constituem um serviço de resultados em direto.</p>
+  <h2>Utilização responsável</h2>
+  <p>Usa o serviço de forma lícita e respeita a sua disponibilidade para as outras pessoas. Não tentes aceder à administração sem autorização, contornar os mecanismos de proteção ou sobrecarregar o serviço.</p>
+  <h2>Nomes, marcas e conteúdos</h2>
+  <p>Os nomes e emblemas dos clubes, competições e canais pertencem aos respetivos titulares e são apresentados para identificação. A sua presença não implica parceria, patrocínio ou associação ao JogoCanal.</p>
+  <h2>Correções e contacto</h2>
+  <p>Encontraste um erro ou tens uma questão sobre o projeto? Escreve para <a href="mailto:info@jogocanal.com">info@jogocanal.com</a>. A agenda e estas informações podem ser atualizadas; a data acima identifica esta versão.</p>
+  <p>Consulta também a <a href="{{ url_for('privacy') }}">Política de Privacidade</a>.</p>
+</article>
+{% endblock %}
