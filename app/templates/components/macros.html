@@ -1,0 +1,15 @@
+{% macro page_heading(eyebrow, heading, description) %}
+<div class="page-heading">
+  <p class="eyebrow">{{ eyebrow }}</p>
+  <h1>{{ heading }}</h1>
+  <p class="page-description">{{ description }}</p>
+</div>
+{% endmacro %}
+
+{% macro empty_state(heading, description) %}
+<div class="empty-state">
+  <span class="empty-icon" aria-hidden="true">◷</span>
+  <h3>{{ heading }}</h3>
+  <p>{{ description }}</p>
+</div>
+{% endmacro %}

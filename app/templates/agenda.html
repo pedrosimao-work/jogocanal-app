@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+{% from 'components/macros.html' import empty_state %}
+{% block content %}
+<section class="welcome-panel" aria-labelledby="welcome-heading">
+  <div class="welcome-copy">
+    <p class="eyebrow">FUTEBOL NA TELEVISÃO</p>
+    <h1 id="welcome-heading">O teu próximo jogo<br>começa <span>aqui.</span></h1>
+    <p>Menos tempo à procura. Mais tempo a torcer.<br>Descobre onde ver o futebol em Portugal.</p>
+    <a class="btn btn-lime" href="#agenda">Explorar a agenda <span aria-hidden="true">↗</span></a>
+  </div>
+  <div class="pitch-art" aria-hidden="true"><div class="pitch-centre"></div><div class="pitch-ball">JC</div><span class="pitch-label">PAIXÃO PELO JOGO.</span></div>
+</section>
+<div class="row g-4 mt-2" id="agenda">
+  <section class="col-lg-8" aria-labelledby="agenda-heading">
+    <div class="section-heading"><div><p class="eyebrow">A NÃO PERDER</p><h2 id="agenda-heading">Agenda de jogos</h2></div><span class="section-note">Horários de Portugal</span></div>
+    <div class="surface">{{ empty_state('A agenda está a ser preparada', 'Em breve, os jogos e os canais para acompanhares cada momento.') }}</div>
+  </section>
+  <aside class="col-lg-4" aria-labelledby="clubs-heading">
+    <div class="section-heading"><div><p class="eyebrow">AS TUAS CORES</p><h2 id="clubs-heading">Sempre com o teu clube</h2></div></div>
+    <div class="club-callout surface">
+      <div class="crest-row" aria-label="Alguns dos clubes acompanhados">
+        {% for filename, name in [('sl-benfica', 'SL Benfica'), ('fc-porto', 'FC Porto'), ('sporting', 'Sporting CP'), ('sc-braga', 'SC Braga')] %}
+        <img src="{{ url_for('static', path='crests/' ~ filename ~ '.png') }}" alt="{{ name }}" width="48" height="48">
+        {% endfor %}
+      </div>
+      <p>Das grandes rivalidades à paixão da tua cidade. O futebol que te move, num só lugar.</p>
+      <a class="text-link" href="{{ url_for('clubs') }}">Explorar os clubes <span aria-hidden="true">→</span></a>
+    </div>
+  </aside>
+</div>
+<div class="info-strip"><span class="info-symbol" aria-hidden="true">i</span><p>Os horários e canais podem sofrer alterações. Confirma a programação junto do operador.</p></div>
+{% endblock %}

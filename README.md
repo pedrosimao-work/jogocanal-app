@@ -147,3 +147,17 @@ persists source batches under a shared OS process lock. See
 [scraper operations and DirectAdmin cron](docs/operations/scraper-cron.md) for
 catalogue setup, exit codes, timeouts, locking and the cron command template.
 The production cron job has not been installed.
+
+## Web interface
+
+The public interface uses FastAPI routes, Jinja templates and locally served
+Bootstrap 5.3.8. Start it with `python -m uvicorn app.main:app --reload`, then visit
+`http://127.0.0.1:8000/`. The shared shell includes responsive navigation,
+Portuguese labels, an accessible skip link, active-page state and reusable heading
+and empty-state macros. `/clubes` is a placeholder until the club directory issue;
+the agenda shell does not yet query or display matches.
+
+Templates live in `app/templates`, web routes in `app/web/routes.py`, and custom
+branding/styles in `app/static/brand` and `app/static/css`. Bootstrap files are
+vendored under `app/static/vendor/bootstrap` with their MIT licence, so rendering
+and navigation do not depend on a third-party CDN. No build step is required.

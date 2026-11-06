@@ -1,0 +1,7 @@
+{% extends 'base.html' %}
+{% from 'components/macros.html' import page_heading, empty_state %}
+{% block content %}
+{{ page_heading('AS TUAS CORES', 'O futebol tem muitas casas.', 'Encontra o teu clube e acompanha os jogos que mais te interessam.') }}
+<section class="surface" aria-label="Clubes">{{ empty_state('Os clubes estão a chegar', 'Estamos a preparar um espaço para acompanhares as tuas equipas.') }}</section>
+<a class="text-link d-inline-block mt-4" href="{{ url_for('agenda') }}">← Voltar à agenda</a>
+{% endblock %}
