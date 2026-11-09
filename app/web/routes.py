@@ -10,13 +10,26 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from starlette.responses import HTMLResponse
 from starlette.templating import Jinja2Templates
 
+from app.core.config import settings
 from app.db.dependencies import get_db_session
 from app.models.scrape import ScrapeRun
 from app.services.clubs import club_directory, find_club
 from app.services.schedule import lisbon_today, seven_day_schedule
 
 router = APIRouter(include_in_schema=False)
-templates = Jinja2Templates(directory=Path(__file__).resolve().parents[1] / "templates")
+
+
+def ad_preview_context(request: Request) -> dict[str, bool | str]:
+    enabled = (
+        settings.environment != "production" and request.query_params.get("ads_preview") == "1"
+    )
+    return {"ads_preview": enabled, "preview_query": "?ads_preview=1" if enabled else ""}
+
+
+templates = Jinja2Templates(
+    directory=Path(__file__).resolve().parents[1] / "templates",
+    context_processors=[ad_preview_context],
+)
 
 
 def render(request: Request, page: str, title: str) -> HTMLResponse:

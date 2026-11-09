@@ -1,10 +1,12 @@
 {% extends 'base.html' %}
 {% from 'components/macros.html' import empty_state %}
+{% from 'components/ad_placeholder.html' import ad_placeholder %}
 {% block content %}
 <section class="welcome-panel" aria-labelledby="welcome-heading">
     <h1 id="welcome-heading">Onde dá a bola <span>hoje?</span></h1>
     <a class="btn btn-brand" href="#agenda">Explorar a agenda <span aria-hidden="true">↗</span></a>
 </section>
+{% if ads_preview %}{{ ad_placeholder('top') }}{% endif %}
 <div class="row g-4 mt-2" id="agenda">
   <section class="col-lg-8" aria-labelledby="agenda-heading">
     <div class="section-heading"><div><p class="eyebrow">A NÃO PERDER</p><h2 id="agenda-heading">Agenda de jogos</h2></div><span class="section-note">Hora de Portugal Continental</span></div>
@@ -22,6 +24,7 @@
       {% for day in days %}<a href="#day-{{ day.date.isoformat() }}"{% if loop.first %} aria-current="date"{% endif %}><strong>{{ day.label }}</strong><span>{{ day.date.strftime('%d/%m') }}</span></a>{% endfor %}
     </nav>
     <div id="schedule-results">
+    {% set ad_state = namespace(shown=false) %}
     {% for day in days %}
     <section class="schedule-day surface" id="day-{{ day.date.isoformat() }}" aria-labelledby="heading-{{ day.date.isoformat() }}">
       <h3 id="heading-{{ day.date.isoformat() }}" class="day-heading">{{ day.label }} <span>{{ day.heading }}</span></h3>
@@ -29,6 +32,10 @@
       {% include 'components/match_table.html' %}
       {% else %}<p class="day-empty">Ainda não há jogos com transmissão confirmada para este dia.</p>{% endif %}
     </section>
+    {% if ads_preview and day.matches and not ad_state.shown and not loop.last %}
+    {{ ad_placeholder('inline') }}
+    {% set ad_state.shown = true %}
+    {% endif %}
     {% endfor %}
     </div>
     <p id="search-empty" class="surface p-4" hidden>Não encontrámos jogos para esta pesquisa.</p>
@@ -43,8 +50,9 @@
         {% endfor %}
       </div>
       <p>Das grandes rivalidades à paixão da tua cidade. O futebol que te move, num só lugar.</p>
-      <a class="text-link" href="{{ url_for('clubs') }}">Explorar os clubes <span aria-hidden="true">→</span></a>
+      <a class="text-link" href="{{ url_for('clubs') }}{{ preview_query }}">Explorar os clubes <span aria-hidden="true">→</span></a>
     </div>
+    {% if ads_preview %}{{ ad_placeholder('sidebar') }}{% endif %}
   </aside>
 </div>
 <div class="info-strip"><span class="info-symbol" aria-hidden="true">i</span><p>Os horários e canais podem sofrer alterações. Confirma a programação junto do operador.</p></div>

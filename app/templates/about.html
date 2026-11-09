@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% from 'components/macros.html' import page_heading %}
+{% from 'components/ad_placeholder.html' import ad_placeholder %}
 {% block content %}
 {{ page_heading('SOBRE O JOGOCANAL', 'Quem Somos', 'Uma forma simples de descobrir onde ver futebol em Portugal.') }}
 <article class="surface about-copy">
@@ -8,6 +9,7 @@
   <p>Os horários são apresentados na hora de Portugal continental. A programação pode mudar; confirma sempre a transmissão junto do teu operador.</p>
   <p>O JogoCanal é um guia de programação. Não disponibiliza transmissões de jogos.</p>
   <p>Este é um projeto independente, desenvolvido por <a href="https://pedrosimao.work">pedrosimao.work</a>. Para sugestões ou correções, contacta <a href="mailto:info@jogocanal.com">info@jogocanal.com</a>.</p>
-  <a class="btn btn-brand" href="{{ url_for('agenda') }}">Ir para a agenda <span aria-hidden="true">→</span></a>
+  <a class="btn btn-brand" href="{{ url_for('agenda') }}{{ preview_query }}">Ir para a agenda <span aria-hidden="true">→</span></a>
 </article>
+{% if ads_preview %}{{ ad_placeholder('inline') }}{% endif %}
 {% endblock %}
