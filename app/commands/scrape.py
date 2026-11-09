@@ -40,6 +40,7 @@ async def execute(args: argparse.Namespace) -> int:
                     delay=args.delay,
                     trigger=args.trigger,
                     job_id=getattr(args, "job_id", None),
+                    discover_catalogue=getattr(args, "discover_catalogue", False),
                 )
             print(f"Scrape run {run_id}: {status}")
             return {"completed": 0, "partial": 3, "failed": 1}[status]
@@ -54,6 +55,11 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--timeout", type=float, default=900)
     parser.add_argument("--delay", type=float, default=0.5)
     parser.add_argument("--trigger", choices=("scheduled", "manual"), default="scheduled")
+    parser.add_argument(
+        "--discover-catalogue",
+        action="store_true",
+        help="Preserve new literal competition/channel names and queue review; never use guessed identities",
+    )
     args = parser.parse_args(argv)
     if (
         not math.isfinite(args.timeout)

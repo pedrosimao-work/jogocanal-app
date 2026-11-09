@@ -184,3 +184,43 @@ async def test_pipeline_carries_source_status(factory):
     async with factory() as session:
         record = (await session.scalars(select(Match))).one()
         assert record.source_status == "ADIADO"
+
+
+async def test_discovery_preserves_source_names_and_is_idempotent(factory):
+    from app.models.competition import Competition
+    from app.models.normalisation import NormalisationCache
+
+    for _ in range(2):
+        _, status = await scrape_pipeline(
+            factory, Reader(), reference_date=date(2026, 11, 6), discover_catalogue=True
+        )
+        assert status == "completed"
+    async with factory() as session:
+        assert (await session.scalars(select(Competition.name))).all() == ["Example Cup"]
+        assert (await session.scalars(select(Channel.name))).all() == ["Example Channel"]
+        assert await session.scalar(select(func.count()).select_from(Match)) == 1
+        reviews = (
+            await session.scalars(
+                select(NormalisationCache).where(NormalisationCache.needs_review.is_(True))
+            )
+        ).all()
+        assert {r.raw_value for r in reviews} == {"Example Cup", "Example Channel"}
+
+
+async def test_discovery_does_not_turn_ai_suggestion_into_new_identity(factory):
+    class Guesser:
+        model = "test-model"
+
+        async def suggest(self, context, raw):
+            return "Unverified guess"
+
+    _, status = await scrape_pipeline(
+        factory,
+        Reader(),
+        reference_date=date(2026, 11, 6),
+        fallback=Guesser(),
+        discover_catalogue=True,
+    )
+    assert status == "completed"
+    async with factory() as session:
+        assert (await session.scalars(select(Channel.name))).all() == ["Example Channel"]

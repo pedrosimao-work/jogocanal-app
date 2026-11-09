@@ -14,6 +14,7 @@ from app.models.mixins import utc_now
 from app.models.scrape import ScrapeJob, ScrapeRun, ScrapeRunEvent
 from app.schemas.ingestion import MatchInput, SourceBatch
 from app.scraper.schemas import ScrapedMatch
+from app.services.catalogue_discovery import discover_entry
 from app.services.ingestion import persist_run
 from app.services.normalisation import NameFallback, NameNormaliser
 
@@ -30,6 +31,7 @@ async def prepare_match(
     session: AsyncSession,
     item: ScrapedMatch,
     fallback: NameFallback | None,
+    discover_catalogue: bool = False,
 ) -> MatchInput:
     normaliser = NameNormaliser(session, fallback)
     home = await normaliser.normalise(item.home_name_raw, "club")
@@ -52,8 +54,25 @@ async def prepare_match(
             )
         )
     )
-    if competition_record is None or len(channel_ids) != len(
-        {channel.value for channel in channels}
+    discovered = 0
+    if discover_catalogue:
+        if competition_record is None:
+            competition_record = await discover_entry(
+                session, Competition, item.competition_raw, "competition"
+            )
+            discovered += 1
+        for raw_channel, normalized in zip(item.channels_raw, channels, strict=True):
+            existing = await session.scalar(
+                select(Channel.id).where(
+                    Channel.name == normalized.value, Channel.is_active.is_(True)
+                )
+            )
+            if existing is None:
+                entry = await discover_entry(session, Channel, raw_channel, "channel")
+                channel_ids.add(entry.id)
+                discovered += 1
+    if competition_record is None or (
+        not discover_catalogue and len(channel_ids) != len({channel.value for channel in channels})
     ):
         raise ValueError("Reviewed competition/channel catalogue entries required")
     home_id = await session.scalar(
@@ -62,7 +81,7 @@ async def prepare_match(
     away_id = await session.scalar(
         select(Club.id).where(Club.name == away.value, Club.is_active.is_(True))
     )
-    unknown = sum(value.needs_review for value in [home, away, competition, *channels])
+    unknown = sum(value.needs_review for value in [home, away, competition, *channels]) + discovered
     return MatchInput(
         kickoff_at=item.kickoff_at,
         source_status=item.source_status,
@@ -89,6 +108,7 @@ async def _scrape_pipeline(
     delay: float = 0.5,
     run_id: int,
     started: datetime,
+    discover_catalogue: bool = False,
 ) -> tuple[int, str]:
     if delay < 0:
         raise ValueError("Request delay cannot be negative")
@@ -118,7 +138,12 @@ async def _scrape_pipeline(
                 else await reader.club_schedule(url, reference_date=reference_date)
             )
             async with sessions.begin() as session:
-                prepared = tuple([await prepare_match(session, item, fallback) for item in raw])
+                prepared = tuple(
+                    [
+                        await prepare_match(session, item, fallback, discover_catalogue)
+                        for item in raw
+                    ]
+                )
             # The parsers do not certify a complete time window: never infer destructive coverage.
             batches.append(
                 SourceBatch(reference=reference, provider_key=provider_key, matches=prepared)
@@ -146,6 +171,7 @@ async def scrape_pipeline(
     delay: float = 0.5,
     trigger: Literal["scheduled", "manual"] = "scheduled",
     job_id: int | None = None,
+    discover_catalogue: bool = False,
 ) -> tuple[int, str]:
     started = utc_now()
     async with sessions.begin() as session:
@@ -168,6 +194,7 @@ async def scrape_pipeline(
             delay=delay,
             run_id=run_id,
             started=started,
+            discover_catalogue=discover_catalogue,
         )
     except BaseException:
         async with sessions.begin() as session:

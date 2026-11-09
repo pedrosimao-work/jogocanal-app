@@ -198,3 +198,15 @@ def test_optional_source_status_is_parsed(status):
     assert (
         parse_daily_schedule(page(), selectors, reference_date=REFERENCE)[0].source_status is None
     )
+
+
+async def test_client_requires_certificate_and_hostname_verification(monkeypatch):
+    import ssl
+    from unittest.mock import MagicMock
+
+    mock = MagicMock()
+    monkeypatch.setattr("app.scraper.client.httpx.AsyncClient", mock)
+    ScheduleSourceClient(CONFIG)
+    context = mock.call_args.kwargs["verify"]
+    assert context.verify_mode == ssl.CERT_REQUIRED
+    assert context.check_hostname is True

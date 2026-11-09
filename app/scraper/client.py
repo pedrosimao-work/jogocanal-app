@@ -1,6 +1,7 @@
 """Reusable async transport with bounded retries and source-neutral errors."""
 
 import asyncio
+import ssl
 from datetime import date
 from types import TracebackType
 
@@ -27,6 +28,7 @@ class ScheduleSourceClient:
         self.retries = retries
         self.retry_delay = retry_delay
         self._client = httpx.AsyncClient(
+            verify=ssl.create_default_context(),
             timeout=timeout,
             transport=transport,
             follow_redirects=True,

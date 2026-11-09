@@ -4,9 +4,13 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="description" content="Descobre onde e quando ver futebol na televisão em Portugal. JogoCanal: o teu jogo, o teu canal.">
-  <meta name="theme-color" content="#12392f">
+  <meta name="theme-color" content="#F68B3A">
   <title>{{ title }} · JogoCanal</title>
-  <link rel="icon" type="image/svg+xml" href="{{ url_for('static', path='brand/mark.svg') }}">
+  <link rel="icon" href="{{ url_for('static', path='brand/favicon.ico') }}" sizes="any">
+  <link rel="icon" type="image/png" sizes="32x32" href="{{ url_for('static', path='brand/favicon-32x32.png') }}">
+  <link rel="icon" type="image/png" sizes="16x16" href="{{ url_for('static', path='brand/favicon-16x16.png') }}">
+  <link rel="apple-touch-icon" sizes="180x180" href="{{ url_for('static', path='brand/apple-touch-icon.png') }}">
+  <link rel="manifest" href="{{ url_for('static', path='brand/site.webmanifest') }}">
   <link rel="stylesheet" href="{{ url_for('static', path='vendor/bootstrap/bootstrap.min.css') }}">
   <link rel="stylesheet" href="{{ url_for('static', path='css/app.css') }}">
   {% block head %}{% endblock %}

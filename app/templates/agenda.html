@@ -2,20 +2,17 @@
 {% from 'components/macros.html' import empty_state %}
 {% block content %}
 <section class="welcome-panel" aria-labelledby="welcome-heading">
-  <div class="welcome-copy">
-    <p class="eyebrow">FUTEBOL NA TELEVISÃO</p>
-    <h1 id="welcome-heading">O teu próximo jogo<br>começa <span>aqui.</span></h1>
-    <p>Menos tempo à procura. Mais tempo a torcer.<br>Descobre onde ver o futebol em Portugal.</p>
-    <a class="btn btn-lime" href="#agenda">Explorar a agenda <span aria-hidden="true">↗</span></a>
-  </div>
-  <div class="pitch-art" aria-hidden="true"><div class="pitch-centre"></div><div class="pitch-ball">JC</div><span class="pitch-label">PAIXÃO PELO JOGO.</span></div>
+    <h1 id="welcome-heading">Onde dá a bola <span>hoje?</span></h1>
+    <a class="btn btn-brand" href="#agenda">Explorar a agenda <span aria-hidden="true">↗</span></a>
 </section>
 <div class="row g-4 mt-2" id="agenda">
   <section class="col-lg-8" aria-labelledby="agenda-heading">
-    <div class="section-heading"><div><p class="eyebrow">A NÃO PERDER</p><h2 id="agenda-heading">Agenda de jogos</h2></div><span class="section-note">Horários de Portugal</span></div>
+    <div class="section-heading"><div><p class="eyebrow">A NÃO PERDER</p><h2 id="agenda-heading">Agenda de jogos</h2></div><span class="section-note">Hora de Portugal Continental</span></div>
     {% if schedule_unavailable %}
     <div class="surface" role="alert">{{ empty_state('A agenda está temporariamente indisponível', 'Tenta novamente dentro de alguns instantes.') }}</div>
     {% else %}
+    {% if last_update %}<p class="update-note">Atualizado em <time datetime="{{ last_update.isoformat() }}">{{ last_update.strftime('%d/%m às %H:%M') }}</time> · Hora de Portugal Continental</p>{% endif %}
+    {% if refresh_incomplete %}<p class="alert alert-warning" role="status">A última atualização ficou incompleta. Mostramos os dados disponíveis; os horários podem ter alterações.</p>{% endif %}
     <div class="search-toolbar surface">
       <label for="schedule-search" class="form-label">Encontra o teu jogo</label>
       <input id="schedule-search" class="form-control" type="search" placeholder="Clube, competição ou canal…" autocomplete="off" aria-controls="schedule-results">

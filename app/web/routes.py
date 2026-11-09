@@ -1,15 +1,17 @@
-from datetime import date, datetime
+from datetime import UTC, date, datetime
 from pathlib import Path
 from typing import Annotated
 from zoneinfo import ZoneInfo
 
 from fastapi import APIRouter, Depends, HTTPException, Request
+from sqlalchemy import select
 from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.ext.asyncio import AsyncSession
 from starlette.responses import HTMLResponse
 from starlette.templating import Jinja2Templates
 
 from app.db.dependencies import get_db_session
+from app.models.scrape import ScrapeRun
 from app.services.clubs import club_directory, find_club
 from app.services.schedule import lisbon_today, seven_day_schedule
 
@@ -36,8 +38,23 @@ async def agenda(
     today: Annotated[date, Depends(lisbon_today)],
 ) -> HTMLResponse:
     unavailable = False
+    last_update = None
+    refresh_incomplete = False
     try:
         days = await seven_day_schedule(session, today)
+        latest = await session.scalar(select(ScrapeRun).order_by(ScrapeRun.id.desc()).limit(1))
+        successful = await session.scalar(
+            select(ScrapeRun)
+            .where(ScrapeRun.status.in_(["completed", "partial"]))
+            .order_by(ScrapeRun.id.desc())
+            .limit(1)
+        )
+        if successful and successful.finished_at:
+            stamp = successful.finished_at
+            last_update = (stamp.replace(tzinfo=UTC) if stamp.tzinfo is None else stamp).astimezone(
+                ZoneInfo("Europe/Lisbon")
+            )
+        refresh_incomplete = latest is not None and latest.status in {"partial", "failed"}
     except SQLAlchemyError:
         days = []
         unavailable = True
@@ -50,6 +67,8 @@ async def agenda(
             "year": today.year,
             "days": days,
             "schedule_unavailable": unavailable,
+            "last_update": last_update,
+            "refresh_incomplete": refresh_incomplete,
         },
         status_code=503 if unavailable else 200,
     )
