@@ -1,6 +1,6 @@
 <header class="site-header">
   <nav class="navbar navbar-expand-md container" aria-label="Navegação principal">
-    <a class="navbar-brand brand" href="{{ url_for('agenda') }}" aria-label="JogoCanal — início">
+    <a class="navbar-brand brand" href="{{ url_for('agenda') }}{{ preview_query }}" aria-label="JogoCanal — início">
       <img class="brand-logo" src="{{ url_for('static', path='brand/android-chrome-192x192.png') }}" width="80" height="80" alt="Jogo Canal">
       <span class="brand-tagline">O teu jogo.<br>O teu canal.</span>
     </a>
@@ -10,7 +10,7 @@
     <div class="collapse navbar-collapse" id="main-navigation">
       <ul class="navbar-nav mx-auto gap-md-2">
         {% for route, label, active_page in [('agenda', 'Agenda', 'agenda'), ('clubs', 'Clubes', 'clubs'), ('about', 'Sobre', 'about')] %}
-        <li class="nav-item"><a class="nav-link{% if page == active_page %} active{% endif %}" href="{{ url_for(route) }}"{% if page == active_page %} aria-current="page"{% endif %}>{{ label }}</a></li>
+        <li class="nav-item"><a class="nav-link{% if page == active_page %} active{% endif %}" href="{{ url_for(route) }}{{ preview_query }}"{% if page == active_page %} aria-current="page"{% endif %}>{{ label }}</a></li>
         {% endfor %}
       </ul>
     </div>

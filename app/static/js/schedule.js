@@ -14,6 +14,7 @@
     document.querySelectorAll(".schedule-day").forEach(day => {
       day.hidden = terms.length > 0 && ![...day.querySelectorAll(".schedule-match")].some(row => !row.hidden);
     });
+    document.querySelectorAll(".ad-preview--inline").forEach(ad => { ad.hidden = terms.length > 0; });
     document.querySelector("#result-count").textContent = `${count} ${count === 1 ? "jogo" : "jogos"}`;
     document.querySelector("#search-empty").hidden = !terms.length || count > 0;
   };

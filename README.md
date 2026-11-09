@@ -285,3 +285,20 @@ local search, administrator sessions and throttling). Operator identity, hosting
 log retention and email-service arrangements must be confirmed for the actual
 production environment before publishing there; these deployment details have not
 been invented. Privacy-rights information links to the CNPD.
+
+### Ad placement preview (Issue #18, first stage)
+
+In local development, visit `/?ads_preview=1` to inspect labelled, inert ad
+placeholders: a 90px-high desktop top banner (up to 970px wide), a 300x250
+desktop-only sidebar slot, and one 300x250 slot after the
+first nonempty day (when another day follows). Mobile uses a shorter top banner.
+Search hides the inline slot so it cannot interrupt filtered results.
+The club directory has a top banner and one 728x90 banner between divisions.
+Individual clubs show one rectangle after their schedule, or a short banner after
+an empty state. About/Who We Are show one rectangle after their content; legal
+pages stay ad-free. Mobile banners are up to 320x100; rectangles remain up to
+300x250, shrinking to fit narrower screens. Preview navigation preserves the flag.
+These are initial layout choices, not a claim of optimal revenue.
+The normal URL is unchanged; production disables this preview even with the query
+parameter. No Google scripts, ad requests or consent cookies are introduced.
+Consent management, real AdSense units and ads.txt remain pending for Issue #18.

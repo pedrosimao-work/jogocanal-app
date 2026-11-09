@@ -146,3 +146,19 @@ a:focus-visible,button:focus-visible,input:focus-visible { outline:3px solid var
 @media(prefers-reduced-motion:reduce) { *,*::before,*::after { scroll-behavior:auto!important; transition:none!important; animation:none!important; } }
 
 .update-note { font-size:.74rem; color:var(--jc-muted); margin-bottom:14px; }
+
+/* Local design preview only; no ad scripts or third-party requests. */
+.ad-preview { margin:24px 0; text-align:center; }
+.ad-preview-label { display:block; margin-bottom:8px; font-size:.65rem; letter-spacing:.12em; text-transform:uppercase; color:#666; }
+.ad-preview-space { display:flex; align-items:center; justify-content:center; margin:auto; border:1px dashed #c5c5c5; border-radius:8px; background:#f5f5f5; color:#666; font-size:.9rem; }
+.ad-preview-space small { display:block; margin-top:8px; font-size:.7rem; }
+.ad-preview--top .ad-preview-space { max-width:970px; height:90px; }
+.ad-preview--divider .ad-preview-space { max-width:728px; height:90px; }
+.ad-preview--sidebar .ad-preview-space { max-width:300px; height:250px; }
+.ad-preview--inline .ad-preview-space { max-width:300px; height:250px; }
+@media(max-width:991px) { .ad-preview--sidebar { display:none; } }
+@media(max-width:767px) {
+  .ad-preview { margin:24px 0; }
+  .ad-preview--top .ad-preview-space,.ad-preview--divider .ad-preview-space { max-width:320px; height:100px; }
+  .ad-preview--inline .ad-preview-space { max-width:300px; height:250px; }
+}
