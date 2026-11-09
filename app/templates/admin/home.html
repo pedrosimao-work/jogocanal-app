@@ -2,5 +2,5 @@
 {% block content %}
 <div class="section-heading"><div><p class="eyebrow">ÁREA RESERVADA</p><h1>Administração</h1></div>
 <form method="post" action="{{ url_for('admin_logout') }}"><input type="hidden" name="csrf" value="{{ csrf }}"><button class="btn btn-outline-secondary" type="submit">Sair</button></form></div>
-<section class="surface p-4"><p class="mb-0">Sessão iniciada como {{ admin.email }}.</p><a class="btn btn-lime mt-4" href="{{ url_for('scraper_dashboard') }}">Gerir atualizações →</a></section>
+<section class="surface p-4"><p class="mb-0">Sessão iniciada como {{ admin.email }}.</p><a class="btn btn-brand mt-4" href="{{ url_for('scraper_dashboard') }}">Gerir atualizações →</a></section>
 {% endblock %}

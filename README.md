@@ -13,9 +13,12 @@ From the repository root in the PyCharm PowerShell terminal:
 ```powershell
 .\.venv\Scripts\python.exe -m alembic upgrade head
 .\.venv\Scripts\python.exe -m app.commands.seed_reference_data
-.\.venv\Scripts\python.exe -m uvicorn app.main:app --reload --host 127.0.0.1 --port 8000
+.\.venv\Scripts\python.exe run.py
 ```
 
+Alternatively, right-click root `run.py` in PyCharm and choose **Run** (not `app/main.py`).
+The launcher starts the website, an immediate schedule update, updates every 30
+minutes after completion, and a separate manual-job worker polling every 15 seconds.
 Keep that terminal running and open **http://127.0.0.1:8000/** in your browser.
 The interface is rendered by FastAPI with Jinja and locally bundled Bootstrap.
 Opening a template file, GitHub source link or `/docs` does not show the website.
@@ -24,7 +27,16 @@ in the terminal to stop the server. No deployment is needed for this local revie
 
 A new database contains clubs but no invented fixtures. The agenda accurately shows
 empty days until an actual source update succeeds. The scraper and worker use the
-private configuration described below; they do not run just by starting the website.
+private configuration described below. `run.py` enables literal catalogue discovery
+so an empty competition/channel catalogue can be populated from source names,
+with a normalisation review entry. It never creates identities from AI guesses.
+Starting Uvicorn directly starts only the website. `run.py --no-scrape` is a
+website-only preview of saved data. No operating-system scheduled job is installed.
+
+To check locally: confirm the orange/black logo and styled agenda, search for a
+team or channel, open `/clubes`, and check `/api/v1/health`. After an update finishes,
+refresh the agenda to see its updated timestamp. Counts depend on current source
+data; pending channels remain explicitly labelled. Ctrl+C stops local services.
 
 ## Reference data (2026/2027)
 
@@ -85,8 +97,11 @@ embedding private URLs or response bodies. The implementation does not persist
 matches, normalize names or schedule scraping jobs; those belong to later issues.
 
 Tests use synthetic HTML and HTTPX mock transports, never production pages.
-Live compatibility must be checked in an environment that can reach the private
-source; the implementation environment could not connect to either sampled page.
+Local live verification on 9 November 2026 succeeded for all 37 configured pages:
+630 unique matches saved, 109 within that seven-day agenda, zero source errors.
+19 of those 109 had a channel still awaiting confirmation. These are observations,
+not a guarantee of future source availability. TLS uses the operating system trust
+store with certificate and hostname verification enabled.
 
 ## Name normalisation
 
@@ -171,7 +186,10 @@ fetches the daily page and active tracked-club mappings, normalises names and
 persists source batches under a shared OS process lock. See
 [scraper operations and DirectAdmin cron](docs/operations/scraper-cron.md) for
 catalogue setup, exit codes, timeouts, locking and the cron command template.
-The production cron job has not been installed.
+For an empty catalogue, add `--discover-catalogue` to the scraper or worker CLI
+to retain literal competition/channel names and queue them for review. Without it,
+the existing strict catalogue requirement remains. The production cron job has not
+been installed.
 
 ## Web interface
 
@@ -179,7 +197,7 @@ The public interface uses FastAPI routes, Jinja templates and locally served
 Bootstrap 5.3.8. Start it with `python -m uvicorn app.main:app --reload`, then visit
 `http://127.0.0.1:8000/`. The shared shell includes responsive navigation,
 Portuguese labels, an accessible skip link, active-page state and reusable heading
-and empty-state macros. `/clubes` is a placeholder until the club directory issue.
+and empty-state macros. `/clubes` shows the seeded club directory.
 The agenda reads persisted televised matches for today and the next six days.
 
 Templates live in `app/templates`, web routes in `app/web/routes.py`, and custom
@@ -199,8 +217,7 @@ Public template data contains only match IDs, local kickoff timestamps, display
 names, competitions and channels. Private source URLs, provider identifiers and
 raw source names are not passed to templates. A database failure returns a safe
 503 state rather than an empty schedule. Reading the agenda never triggers a
-scrape or writes to the database. Search, counters and match status controls are
-reserved for Issue #12; the visual walkthrough follows that issue.
+scrape or writes to the database. Search, counters and match status controls are implemented as described below.
 
 ### Responsive schedule (Issue #12)
 The desktop table becomes mobile match cards. Local JavaScript filters teams, competitions and channels immediately, ignoring accents and case, and announces the visible count. All matches remain readable without JavaScript. Live, postponed and finished states require a recognised source status; upcoming within one hour is A SEGUIR. Past kickoffs without a source status remain POR CONFIRMAR; elapsed time alone never claims a match is live or finished.
@@ -254,8 +271,8 @@ can then request a new job. The database enforces at most one pending/running jo
 
 This is a single-host SQLite worker, not an in-process FastAPI background task.
 The worker requires the existing private source configuration and reviewed
-catalogue. Production worker/cron installation and live-source verification remain
-operational deployment steps, tracked with Issue #9; no production job was installed.
+catalogue. Local live-source ingestion has been verified. Production worker/cron installation
+remains a deployment step; no production job was installed.
 
 The private selector profile optionally accepts status_selector. When configured, source match statuses flow through parsing, normalisation and persistence into public badges. An unconfigured or absent status stays unknown; no live state is invented. A duplicate club-page row without a status does not erase a status present on the same run's daily page. Live-source selector compatibility still requires private verification.
 

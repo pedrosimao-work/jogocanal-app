@@ -30,6 +30,7 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--lock-file", type=Path, default=Path("private/scraper.lock"))
     parser.add_argument("--timeout", type=float, default=900)
     parser.add_argument("--delay", type=float, default=0.5)
+    parser.add_argument("--discover-catalogue", action="store_true")
     args = parser.parse_args(argv)
     if (
         not math.isfinite(args.timeout)
